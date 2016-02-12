@@ -2,10 +2,13 @@
 	<arg name="marker_size" default="4.4" />
 	<arg name="max_new_marker_error" default="0.08" />
 	<arg name="max_track_error" default="0.2" />
-
+	<arg name="node_name" default="ar_track_alvar" />
 	<arg name="cam_image_topic" default="/kinect_head/depth_registered/points" />
 	<arg name="cam_info_topic" default="/kinect_head/rgb/camera_info" />		
 	<arg name="output_frame" default="/torso_lift_link" />
+	<arg name="markerFrame" default="ar_track_" />
 
-	<node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkers" respawn="false" output="screen" args="$(arg marker_size) $(arg max_new_marker_error) $(arg max_track_error) $(arg cam_image_topic) $(arg cam_info_topic) $(arg output_frame)" />
+	<node name="$(arg node_name)" pkg="ar_track_alvar" type="individualMarkers" respawn="false" output="screen" args="$(arg marker_size) $(arg max_new_marker_error) $(arg max_track_error) $(arg cam_image_topic) $(arg cam_info_topic) $(arg output_frame)">
+		<param name="markerFrame"   type="str" value="$(arg markerFrame)" />
+	</node>
 </launch>

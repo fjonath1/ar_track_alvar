@@ -82,7 +82,7 @@ double max_track_error;
 std::string cam_image_topic; 
 std::string cam_info_topic; 
 std::string output_frame;
-
+std::string markerFrame;
 
 //Debugging utility function
 void draw3dPoints(ARCloud::Ptr cloud, string frame, int color, int id, double rad)
@@ -377,13 +377,13 @@ void getPointCloudCallback (const sensor_msgs::PointCloud2ConstPtr &msg)
       tf::Transform m (tf::Quaternion::getIdentity (), markerOrigin);
       tf::Transform markerPose = t * m; // marker pose in the camera frame
 
-	  //Publish the transform from the camera to the marker		
-	  std::string markerFrame = "ar_marker_";
+	  //Publish the transform from the camera to the marker
 	  std::stringstream out;
 	  out << id;
 	  std::string id_string = out.str();
-	  markerFrame += id_string;
-	  tf::StampedTransform camToMarker (t, image_msg->header.stamp, image_msg->header.frame_id, markerFrame.c_str());
+      std::string markerName = markerFrame;
+	  markerName += id_string;
+	  tf::StampedTransform camToMarker (t, image_msg->header.stamp, image_msg->header.frame_id, markerName.c_str());
 	  tf_broadcaster->sendTransform(camToMarker);
 				
 	  //Create the rviz visualization messages
@@ -504,6 +504,7 @@ int main(int argc, char *argv[])
   pn.setParam("marker_size", marker_size);
   pn.setParam("max_new_marker_error", max_new_marker_error);
   pn.setParam("max_track_error", max_track_error);
+  pn.param("markerFrame",markerFrame,std::string("ar_track_"));
 
   if (argc > 7)
     pn.setParam("max_frequency", max_frequency);
